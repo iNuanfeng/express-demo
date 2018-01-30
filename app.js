@@ -1,5 +1,6 @@
 var express = require('express');
 var nunjucks = require('nunjucks');
+var axios = require('axios');
 var app = express();
 
 nunjucks.configure('./views', {
@@ -8,8 +9,17 @@ nunjucks.configure('./views', {
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-  res.render('index', { 
-    company: 'Duiba FED' 
+  // 发送ajax请求
+  axios({
+    method: 'get',
+    url: 'http://m.7ho.com/band/bandList'
+  }).then(data => {
+    let banners = data.data.data || [];
+    res.render('index', { 
+      company: 'Duiba FED',
+      banners: banners
+    });
+  }).catch(err => {
   });
 });
 
